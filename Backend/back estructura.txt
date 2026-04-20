@@ -1,0 +1,38 @@
+backend/
+  package.json
+  .env.example
+  src/
+    server.js
+    db.js
+    middleware/
+      auth.js
+    routes/
+      auth.js
+      content.js
+      genres.js
+      platforms.js
+      user.js
+    controllers/
+      authController.js
+      contentController.js
+      miscController.js
+    helpers/
+      validate.js
+
+
+---------------------------
+Backend/
+ ├─ src/
+ │   ├─ config/
+ │   │    └─ db.js
+ │   ├─ middleware/
+ │   │    └─ auth.js
+ │   ├─ controllers/
+ │   │    ├─ auth.controller.js
+ │   │    └─ media.controller.js
+ │   ├─ routes/
+ │   │    ├─ auth.routes.js
+ │   │    └─ media.routes.js
+ │   └─ index.js
+ ├─ .env
+ └─ package.json

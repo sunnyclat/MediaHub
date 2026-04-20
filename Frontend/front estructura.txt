@@ -1,0 +1,17 @@
+frontend/
+  package.json
+  vite.config.js
+  .env.example
+  src/
+    main.jsx
+    App.jsx
+    api.js
+    auth/
+      AuthContext.jsx
+      ProtectedRoute.jsx
+    pages/
+      Home.jsx
+      Login.jsx
+      Register.jsx
+      ContentDetail.jsx
+      Profile.jsx

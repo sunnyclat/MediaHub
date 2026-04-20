@@ -1,0 +1,93 @@
+.admin-content-shell {
+  padding: 24px;
+}
+
+.admin-content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.admin-content-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.admin-content-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.admin-content-toolbar {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.admin-year-filter {
+  max-width: 180px;
+}
+
+.admin-sort-select {
+  max-width: 220px;
+}
+
+.admin-content-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+}
+
+.admin-content-poster {
+  width: 78px;
+  height: 116px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.admin-content-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.admin-content-title {
+  margin: 0 0 4px;
+  font-size: 1rem;
+}
+
+.admin-content-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-content-link {
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  .admin-content-header,
+  .admin-content-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-year-filter,
+  .admin-sort-select {
+    max-width: 100%;
+  }
+
+  .admin-content-poster {
+    width: 100%;
+    height: 220px;
+  }
+}

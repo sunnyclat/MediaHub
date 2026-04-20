@@ -1,0 +1,131 @@
+.detail-poster {
+  width: 100%;
+  max-width: 300px;
+  display: block;
+  margin: 0 auto 20px;
+  border-radius: 10px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.24);
+}
+
+.likes-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 14px;
+  flex-wrap: wrap;
+}
+
+.like-button {
+  border-radius: 999px;
+  padding: 8px 14px;
+}
+
+.like-button.is-liked {
+  border-color: #e2486b;
+  background: rgba(226, 72, 107, 0.14);
+}
+
+.likes-count {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.poster-editor {
+  margin: 20px 0;
+  padding: 16px;
+}
+
+.poster-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.poster-editor-title {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+
+.poster-editor-body {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.poster-editor-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.poster-editor-actions .field-input {
+  flex: 1;
+}
+
+.poster-year-input {
+  max-width: 100px;
+}
+
+.poster-type-input {
+  max-width: 140px;
+}
+
+.poster-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.poster-result-card {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  background: var(--panel-bg);
+}
+
+.poster-result-image {
+  width: 92px;
+  height: 138px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.poster-result-copy {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.poster-editor-danger {
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
+}
+
+.danger-button {
+  border-radius: 999px;
+  padding: 10px 14px;
+  border: 1px solid #c64d4d;
+  background: rgba(198, 77, 77, 0.12);
+  color: #c64d4d;
+}
+
+@media (max-width: 640px) {
+  .poster-editor-header {
+    flex-direction: column;
+  }
+
+  .poster-editor-actions,
+  .poster-result-card {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .poster-result-image {
+    width: 100%;
+    height: 220px;
+  }
+}

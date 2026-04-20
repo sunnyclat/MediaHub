@@ -1,0 +1,5 @@
+Home / Catalog
+ ├─ SearchBar
+ ├─ ContentGrid
+ │   └─ ContentCard
+ │        └─ Overlay (hover)

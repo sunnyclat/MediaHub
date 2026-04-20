@@ -1,0 +1,136 @@
+:root {
+  font-family: "Segoe UI", Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+  color: #1d2433;
+  background: radial-gradient(circle at top, #ffe1b7 0%, #ffb16a 35%, #f2783a 100%);
+  background-attachment: fixed;
+  --page-background: radial-gradient(circle at top, #ffe1b7 0%, #ffb16a 35%, #f2783a 100%);
+  --text-primary: #1d2433;
+  --text-muted: #536074;
+  --surface-elevated: rgba(255, 255, 255, 0.7);
+  --header-surface: rgba(255, 255, 255, 0.46);
+  --link-color: #1e4fd1;
+  --app-surface: rgba(255, 247, 238, 0.18);
+  --border-color: rgba(57, 74, 98, 0.16);
+  --input-bg: rgba(255, 255, 255, 0.86);
+  --input-text: #1d2433;
+  --panel-bg: rgba(255, 255, 255, 0.9);
+  --panel-hover: rgba(246, 190, 139, 0.26);
+  --button-bg: #fff6ea;
+  --button-text: #1d2433;
+  --button-border: rgba(57, 74, 98, 0.18);
+  --hero-background: linear-gradient(135deg, #ff8f5a 0%, #f25f4c 45%, #7d3cff 100%);
+  --hero-shadow: 0 16px 40px rgba(90, 39, 9, 0.22);
+  --featured-background: linear-gradient(90deg, #1e3c72, #2a5298);
+  --all-background: linear-gradient(90deg, #006837, #6cc551);
+  --footer-background: linear-gradient(135deg, #121212 0%, #1b1b1b 100%);
+  --footer-text: rgba(255, 255, 255, 0.9);
+  --footer-link: #9ac1ff;
+  --footer-border: #2b8cfa;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  color: rgba(255, 255, 255, 0.92);
+  background: radial-gradient(circle at top, #25304f 0%, #151b31 35%, #090c18 100%);
+  --page-background: radial-gradient(circle at top, #25304f 0%, #151b31 35%, #090c18 100%);
+  --text-primary: rgba(255, 255, 255, 0.92);
+  --text-muted: rgba(229, 234, 244, 0.72);
+  --surface-elevated: rgba(17, 24, 39, 0.82);
+  --header-surface: rgba(9, 14, 26, 0.72);
+  --link-color: #7fb0ff;
+  --app-surface: rgba(7, 12, 24, 0.82);
+  --border-color: rgba(155, 178, 220, 0.18);
+  --input-bg: rgba(14, 18, 32, 0.88);
+  --input-text: rgba(255, 255, 255, 0.92);
+  --panel-bg: rgba(12, 17, 31, 0.92);
+  --panel-hover: rgba(63, 88, 146, 0.35);
+  --button-bg: rgba(20, 26, 45, 0.92);
+  --button-text: rgba(255, 255, 255, 0.92);
+  --button-border: rgba(155, 178, 220, 0.24);
+  --hero-background: linear-gradient(135deg, #152238 0%, #22345f 45%, #0d111d 100%);
+  --hero-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+  --featured-background: linear-gradient(90deg, #101f3d, #1c315e);
+  --all-background: linear-gradient(90deg, #14302a, #245146);
+  --footer-background: linear-gradient(135deg, #0c101c 0%, #141b2f 100%);
+  --footer-text: rgba(255, 255, 255, 0.9);
+  --footer-link: #9ac1ff;
+  --footer-border: #7fb0ff;
+}
+
+a {
+  font-weight: 500;
+  color: var(--link-color);
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: var(--text-primary);
+}
+
+html, body, #root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--page-background);
+  color: var(--text-primary);
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+#root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+}
+
+#root > div {
+  background: var(--app-surface);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 90px rgba(0, 0, 0, 0.28);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid var(--button-border);
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  cursor: pointer;
+  transition:
+    border-color 0.25s,
+    background-color 0.25s,
+    color 0.25s,
+    transform 0.25s ease;
+}
+
+button:hover {
+  border-color: var(--link-color);
+  transform: translateY(-1px);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
