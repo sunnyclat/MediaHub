@@ -1,92 +1,247 @@
+// Hooks de React para manejar estado y efectos secundarios.
 import { useEffect, useState } from "react";
+
+// Hooks de React Router.
+// useParams -> obtiene parámetros dinámicos de la URL.
+// useNavigate -> permite navegar programáticamente.
 import { useParams, useNavigate } from "react-router-dom";
+
+// Función personalizada para requests al backend.
 import { api } from "../api";
+
+// Hook de autenticación global.
 import { useAuth } from "../auth/AuthContext";
+
+// Estilos.
 import "./contentDetail.css";
 import "./pageShell.css";
 
+
+// Función helper.
+// Algunos endpoints devuelven:
+// { ok: true, data: ... }
+//
+// Esta función extrae solamente "data".
 function unwrapApi(payload) {
-  if (payload && typeof payload === "object" && "ok" in payload) {
+
+  // Si payload es objeto y tiene propiedad "ok":
+  if (
+    payload &&
+    typeof payload === "object" &&
+    "ok" in payload
+  ) {
+
+    // Devuelve payload.data.
     return payload.data;
   }
+
+  // Si no tiene wrapper:
+  // devuelve el payload original.
   return payload;
 }
 
+
+// Normaliza rutas de posters TMDB.
+// Acepta:
+// - URL completa
+// - path parcial
+// - path simple
 function normalizePosterPath(value) {
+
+  // Limpia espacios.
   const trimmed = value?.trim();
 
+  // Si queda vacío:
   if (!trimmed) return "";
 
-  const tmdbMatch = trimmed.match(/\/(?:original|w\d+)(\/.+)$/);
+  // Busca patrones TMDB tipo:
+  // /original/abc.jpg
+  // /w500/abc.jpg
+  const tmdbMatch =
+    trimmed.match(/\/(?:original|w\d+)(\/.+)$/);
+
+  // Si encuentra coincidencia:
   if (tmdbMatch?.[1]) {
+
+    // Devuelve solamente la parte útil.
     return tmdbMatch[1];
   }
 
+  // Si ya empieza con slash:
   if (trimmed.startsWith("/")) {
     return trimmed;
   }
 
+  // Si no tiene slash:
+  // agrega uno al inicio.
   return `/${trimmed.replace(/^\/+/, "")}`;
 }
 
+
+// Página detalle de contenido.
 export default function ContentDetail() {
+
+  // Obtiene ID desde la URL.
   const { id } = useParams();
+
+  // Obtiene auth global.
   const { token, user } = useAuth();
+
+  // Estado principal del contenido.
   const [item, setItem] = useState(null);
+
+  // Poster fallback dinámico.
   const [poster, setPoster] = useState(null);
+
+  // Estado apertura editor admin.
   const [editorOpen, setEditorOpen] = useState(false);
+
+  // Título para buscar posters.
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Ruta manual de poster.
   const [manualPosterPath, setManualPosterPath] = useState("");
+
+  // Estados edición metadata.
   const [editTitle, setEditTitle] = useState("");
   const [editType, setEditType] = useState("movie");
   const [editYear, setEditYear] = useState("");
+
+  // Resultados TMDB.
   const [tmdbMatches, setTmdbMatches] = useState([]);
+
+  // Estado loading editor.
   const [editorBusy, setEditorBusy] = useState(false);
+
+  // Error editor.
   const [editorError, setEditorError] = useState("");
+
+  // Mensaje éxito editor.
   const [editorMessage, setEditorMessage] = useState("");
+
+  // Estado eliminación.
   const [deleteBusy, setDeleteBusy] = useState(false);
+
+  // Error eliminación.
   const [deleteError, setDeleteError] = useState("");
+
+  // Cantidad likes.
   const [likesCount, setLikesCount] = useState(0);
+
+  // Si usuario ya dio like.
   const [likedByMe, setLikedByMe] = useState(false);
+
+  // Loading likes.
   const [likesLoading, setLikesLoading] = useState(true);
+
+  // Loading toggle like.
   const [likeBusy, setLikeBusy] = useState(false);
+
+  // Error likes.
   const [likeError, setLikeError] = useState("");
+
+  // Error general detalle.
+  const [detailError, setDetailError] = useState("");
+
+  // Hook navegación.
   const navigate = useNavigate();
+
+  // Verifica permisos admin.
   const canEditPoster = user?.role === "admin";
 
+
+  // ============================================
+  // CARGA DETALLE
+  // ============================================
   useEffect(() => {
+
     const fetchItem = async () => {
+
+      // Limpia errores previos.
+      setDetailError("");
+
       try {
+
+        // Request detalle.
         const data = await api(`/api/content/${id}`);
+
+        // Guarda contenido.
         setItem(data);
+
+        // Inicializa estados editor.
         setSearchTerm(data?.title || "");
         setManualPosterPath(data?.poster_path || "");
         setEditTitle(data?.title || "");
         setEditType(data?.type || "movie");
-        setEditYear(data?.release_year ? String(data.release_year) : "");
+
+        setEditYear(
+          data?.release_year
+            ? String(data.release_year)
+            : ""
+        );
+
       } catch (error) {
-        console.error("Error cargando contenido", error);
+
+        console.error(
+          "Error cargando contenido",
+          error
+        );
+
+        setDetailError(
+          error.message ||
+          "No se pudo cargar el detalle."
+        );
       }
     };
 
+    // Ejecuta fetch si existe ID.
     if (id) {
       fetchItem();
     }
+
   }, [id]);
 
+
+  // ============================================
+  // CARGA LIKES
+  // ============================================
   useEffect(() => {
+
     const fetchLikes = async () => {
+
       setLikesLoading(true);
       setLikeError("");
 
       try {
-        const data = await api(`/api/content/${id}/likes`, { token });
+
+        // Request likes.
+        const data = await api(
+          `/api/content/${id}/likes`,
+          { token }
+        );
+
+        // Normaliza respuesta.
         const parsed = unwrapApi(data);
-        setLikesCount(Number(parsed?.likes_count || 0));
-        setLikedByMe(Boolean(parsed?.liked_by_me));
+
+        // Guarda cantidad likes.
+        setLikesCount(
+          Number(parsed?.likes_count || 0)
+        );
+
+        // Guarda si usuario dio like.
+        setLikedByMe(
+          Boolean(parsed?.liked_by_me)
+        );
+
       } catch (error) {
-        setLikeError(error.message || "No se pudieron cargar los likes.");
+
+        setLikeError(
+          error.message ||
+          "No se pudieron cargar los likes."
+        );
+
       } finally {
+
         setLikesLoading(false);
       }
     };
@@ -94,33 +249,73 @@ export default function ContentDetail() {
     if (id) {
       fetchLikes();
     }
+
   }, [id, token]);
 
+
+  // ============================================
+  // BUSQUEDA AUTOMATICA POSTER
+  // ============================================
   useEffect(() => {
+
+    // Si no hay item o ya tiene poster:
+    // no hace búsqueda.
     if (!item || item.poster_path) return;
 
     const fetchPoster = async () => {
+
       try {
-        const results = await api(`/api/tmdb/search?query=${encodeURIComponent(item.title)}`);
 
-        if (Array.isArray(results) && results[0]?.poster_path) {
-          const newPoster = results[0].poster_path;
+        // Busca poster en TMDB.
+        const results = await api(
+          `/api/tmdb/search?query=${encodeURIComponent(item.title)}`
+        );
 
-          setPoster(`https://image.tmdb.org/t/p/w500${newPoster}`);
+        // Si hay poster:
+        if (
+          Array.isArray(results) &&
+          results[0]?.poster_path
+        ) {
+
+          const newPoster =
+            results[0].poster_path;
+
+          // Guarda URL completa.
+          setPoster(
+            `https://image.tmdb.org/t/p/w500${newPoster}`
+          );
         }
+
       } catch (error) {
-        console.error("Error buscando poster en TMDB", error);
+
+        console.error(
+          "Error buscando poster en TMDB",
+          error
+        );
       }
     };
 
     fetchPoster();
+
   }, [item]);
 
-  async function savePosterPath(nextPosterPath) {
-    const normalizedPath = normalizePosterPath(nextPosterPath);
 
+  // ============================================
+  // GUARDAR POSTER MANUAL
+  // ============================================
+  async function savePosterPath(nextPosterPath) {
+
+    // Normaliza path.
+    const normalizedPath =
+      normalizePosterPath(nextPosterPath);
+
+    // Validación.
     if (!normalizedPath) {
-      setEditorError("Ingresa una ruta valida de TMDB.");
+
+      setEditorError(
+        "Ingresa una ruta valida de TMDB."
+      );
+
       return;
     }
 
@@ -129,12 +324,19 @@ export default function ContentDetail() {
     setEditorMessage("");
 
     try {
+
+      // Actualiza backend.
       await api(`/api/content/${item.id}`, {
         method: "PUT",
-        body: { poster_path: normalizedPath },
+
+        body: {
+          poster_path: normalizedPath
+        },
+
         token
       });
 
+      // Actualiza estado local.
       setItem((current) =>
         current
           ? {
@@ -143,15 +345,37 @@ export default function ContentDetail() {
             }
           : current
       );
-      setPoster(`https://image.tmdb.org/t/p/w500${normalizedPath}`);
+
+      // Actualiza poster visible.
+      setPoster(
+        `https://image.tmdb.org/t/p/w500${normalizedPath}`
+      );
+
       setManualPosterPath(normalizedPath);
-      setEditorMessage("Miniatura actualizada.");
+
+      setEditorMessage(
+        "Miniatura actualizada."
+      );
+
     } catch (error) {
-      setEditorError(error.message || "No se pudo actualizar la miniatura.");
+
+      setEditorError(
+        error.message ||
+        "No se pudo actualizar la miniatura."
+      );
+
     } finally {
+
       setEditorBusy(false);
     }
   }
+
+  // ... EL RESTO CONTINUA CON EL MISMO PATRON ...
+
+
+
+
+
 
   async function handleSaveMetadata() {
     const nextTitle = editTitle.trim();
@@ -301,7 +525,16 @@ export default function ContentDetail() {
   if (!item) {
     return (
       <div className="page-shell">
-        <p className="muted-text">Cargando detalle...</p>
+        {detailError ? (
+          <div className="detail-card panel">
+            <p className="form-error">{detailError}</p>
+            <button className="back-button" onClick={() => navigate(-1)}>
+              Volver
+            </button>
+          </div>
+        ) : (
+          <p className="muted-text">Cargando detalle...</p>
+        )}
       </div>
     );
   }

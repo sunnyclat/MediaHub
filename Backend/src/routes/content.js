@@ -506,3 +506,68 @@ router.delete("/:id/like", authRequired, async (req, res) => {
     });
   }
 });
+
+
+
+// ======================================================
+// OBTENER DETALLE DE CONTENIDO
+// ======================================================
+
+router.get("/:id", async (req, res) => {
+
+  const contentId = Number(req.params.id);
+
+  if (!Number.isInteger(contentId) || contentId <= 0) {
+
+    return res.status(400).json({
+      message: "ID de contenido invalido"
+    });
+  }
+
+  try {
+
+    const [[content]] = await pool.query(
+      "SELECT * FROM content WHERE id = ?",
+      [contentId]
+    );
+
+    if (!content) {
+
+      return res.status(404).json({
+        message: "Contenido no encontrado"
+      });
+    }
+
+    const [genres] = await pool.query(
+      `SELECT g.id, g.name
+       FROM genres g
+       JOIN content_genres cg ON g.id = cg.genre_id
+       WHERE cg.content_id = ?`,
+      [contentId]
+    );
+
+    const [platforms] = await pool.query(
+      `SELECT p.id, p.name
+       FROM platforms p
+       JOIN content_platforms cp ON p.id = cp.platform_id
+       WHERE cp.content_id = ?`,
+      [contentId]
+    );
+
+    return res.json({
+      ...content,
+      genres,
+      platforms
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    return res.status(500).json({
+      message: "Error obteniendo contenido"
+    });
+  }
+});
+
+export default router;
